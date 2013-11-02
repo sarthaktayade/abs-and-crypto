@@ -1,4 +1,4 @@
-package com.abstrucelogic.crypto.service;
+package com.abstrucelogic.crypto.mode.service;
 
 import java.util.HashMap;
 

@@ -1,4 +1,4 @@
-package com.abstrucelogic.crypto.service;
+package com.abstrucelogic.crypto.mode.service;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.os.IBinder;
 import com.abstrucelogic.crypto.CryptoHandler;
 import com.abstrucelogic.crypto.conf.CryptoConf;
 import com.abstrucelogic.crypto.constants.CryptoProcessStatus;
-import com.abstrucelogic.crypto.service.CryptoService.CryptoServiceBinder;
+import com.abstrucelogic.crypto.mode.service.CryptoService.CryptoServiceBinder;
 
 public class CryptoServiceHandler implements CryptoHandler {
 

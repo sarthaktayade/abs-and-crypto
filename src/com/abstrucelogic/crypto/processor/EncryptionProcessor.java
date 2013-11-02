@@ -11,6 +11,13 @@ import javax.crypto.CipherOutputStream;
 
 import com.abstrucelogic.crypto.constants.CryptoProcessStatus;
 
+/**
+ * 
+ * This is used to perform the actual encryption procedure.
+ * 
+ * @author abslog
+ *
+ */
 public class EncryptionProcessor {
 	
 	private CryptoProcessStatusListener mProcessListener;
@@ -19,6 +26,13 @@ public class EncryptionProcessor {
 		this.mProcessListener = listener;
 	}
 	
+	/**
+	 * This method encrypts a file and places the encrypted file in the given file path.
+	 *
+	 * @param inputFilePath - path of the file to encrypt
+	 * @param outputFilePath - path of the final encrypted file.
+	 * @param cipher - the cipher object which holds the encryption method details.
+	 */
 	public void encryptFile(String inputFilePath, String outputFilePath, Cipher cipher) {
 		FileInputStream inStream = null;
 		BufferedInputStream buffInStream = null;
@@ -81,21 +95,4 @@ public class EncryptionProcessor {
 			}	
 		}
 	}
-
-	/*private static Cipher getEncCipher() {
-		Cipher cipher = null;
-		try {
-			cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");	
-			byte[] byteArr = "1234567891234567".getBytes("UTF-8");
-			byte[] byteArrKey = EncryptionProcessor.key.getBytes("UTF-8");
-			SecretKeySpec keySpec = new SecretKeySpec(byteArrKey, "AES/CBC/PKCS5Padding");
-			IvParameterSpec spec = new IvParameterSpec(byteArr);
-			cipher.init(Cipher.ENCRYPT_MODE, keySpec, spec); 	
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		return cipher;
-	}*/
-
-	
 }

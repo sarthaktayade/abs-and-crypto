@@ -1,4 +1,4 @@
-package com.abstrucelogic.crypto.processor;
+package com.abstrucelogic.crypto.mode.sync;
 
 import javax.crypto.Cipher;
 
@@ -7,6 +7,8 @@ import com.abstrucelogic.crypto.CryptoScheduler;
 import com.abstrucelogic.crypto.conf.CryptoConf;
 import com.abstrucelogic.crypto.constants.CryptoOperation;
 import com.abstrucelogic.crypto.constants.CryptoProcessStatus;
+import com.abstrucelogic.crypto.processor.DecryptionProcessor;
+import com.abstrucelogic.crypto.processor.EncryptionProcessor;
 
 public class CryptoSyncHandler implements CryptoHandler {
 

@@ -1,4 +1,4 @@
-package com.abstrucelogic.crypto.async;
+package com.abstrucelogic.crypto.mode.async;
 
 import com.abstrucelogic.crypto.CryptoHandler;
 import com.abstrucelogic.crypto.CryptoScheduler;

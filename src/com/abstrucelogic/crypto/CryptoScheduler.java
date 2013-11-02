@@ -4,11 +4,11 @@ import java.util.HashMap;
 
 import android.content.Context;
 
-import com.abstrucelogic.crypto.async.CryptoAsyncHandler;
 import com.abstrucelogic.crypto.conf.CryptoConf;
 import com.abstrucelogic.crypto.constants.CryptoProcessMode;
-import com.abstrucelogic.crypto.processor.CryptoSyncHandler;
-import com.abstrucelogic.crypto.service.CryptoServiceHandler;
+import com.abstrucelogic.crypto.mode.async.CryptoAsyncHandler;
+import com.abstrucelogic.crypto.mode.service.CryptoServiceHandler;
+import com.abstrucelogic.crypto.mode.sync.CryptoSyncHandler;
 
 public class CryptoScheduler {
 	
