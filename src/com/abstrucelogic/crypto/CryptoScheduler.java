@@ -6,6 +6,7 @@ import android.content.Context;
 
 import com.abstrucelogic.crypto.conf.CryptoConf;
 import com.abstrucelogic.crypto.constants.CryptoProcessMode;
+import com.abstrucelogic.crypto.mode.CryptoHandler;
 import com.abstrucelogic.crypto.mode.async.CryptoAsyncHandler;
 import com.abstrucelogic.crypto.mode.service.CryptoServiceHandler;
 import com.abstrucelogic.crypto.mode.sync.CryptoSyncHandler;

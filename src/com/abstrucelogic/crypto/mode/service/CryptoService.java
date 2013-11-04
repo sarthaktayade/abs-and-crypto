@@ -15,7 +15,7 @@ import android.os.Message;
 import android.os.Process;
 import android.widget.Toast;
 
-import com.abstrucelogic.crypto.CryptoHandler;
+import com.abstrucelogic.crypto.mode.CryptoHandler;
 import com.abstrucelogic.crypto.CryptoScheduler;
 import com.abstrucelogic.crypto.R;
 

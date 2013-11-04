@@ -1,4 +1,4 @@
-package com.abstrucelogic.crypto;
+package com.abstrucelogic.crypto.mode;
 
 import com.abstrucelogic.crypto.processor.CryptoProcessStatusListener;
 

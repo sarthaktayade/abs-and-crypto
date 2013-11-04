@@ -1,36 +1,12 @@
 package com.abstrucelogic.crypto.mode.async;
 
-import com.abstrucelogic.crypto.CryptoHandler;
-import com.abstrucelogic.crypto.CryptoScheduler;
 import com.abstrucelogic.crypto.conf.CryptoConf;
-import com.abstrucelogic.crypto.constants.CryptoProcessStatus;
+import com.abstrucelogic.crypto.mode.AbstractCryptoHandler;
 
-public class CryptoAsyncHandler implements CryptoHandler {
-
-	private CryptoConf mCurCryptoConf;
+public class CryptoAsyncHandler extends AbstractCryptoHandler {
 	
 	public CryptoAsyncHandler(CryptoConf conf) {
-		this.mCurCryptoConf = conf;
-	}
-
-	@Override
-	public void processStatusUpdate(CryptoProcessStatus status, float progressPer) {
-		switch(status) {
-		case COMPLETE :
-			this.mCurCryptoConf.getListener().cryptoProcessComplete();
-			CryptoScheduler.getInstance().requestRemoveFromSchedulingMap(this.mCurCryptoConf);
-			break;
-		case ERROR :
-			this.mCurCryptoConf.getListener().cryptoProcessError();
-			CryptoScheduler.getInstance().requestRemoveFromSchedulingMap(this.mCurCryptoConf);
-			break;
-		case INPROGRESS : 
-			this.mCurCryptoConf.getListener().cryptoInProgress(progressPer);
-			break;
-		case START:
-			this.mCurCryptoConf.getListener().cryptoProcessStarted();
-			break;
-		}
+		super(conf);
 	}
 
 	@Override
@@ -39,7 +15,7 @@ public class CryptoAsyncHandler implements CryptoHandler {
 	}
 	
 	public void exec() {
-		new CryptoAsyncTask( this , mCurCryptoConf ).execute((Void)null);
+		new CryptoAsyncTask(this).execute((Void) null);
 	}
 
 }
