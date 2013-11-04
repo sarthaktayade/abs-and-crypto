@@ -33,11 +33,13 @@ public class CryptoAsyncHandler implements CryptoHandler {
 		}
 	}
 
-
+	@Override
+	public void scheduledForExec() {
+		this.exec();
+	}
+	
 	public void exec() {
 		new CryptoAsyncTask( this , mCurCryptoConf ).execute((Void)null);
 	}
-
-
 
 }

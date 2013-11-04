@@ -1,65 +1,77 @@
 package com.abstrucelogic.crypto.mode.service;
 
-import android.content.ComponentName;
+import javax.crypto.Cipher;
+
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 
 import com.abstrucelogic.crypto.CryptoHandler;
+import com.abstrucelogic.crypto.CryptoScheduler;
 import com.abstrucelogic.crypto.conf.CryptoConf;
+import com.abstrucelogic.crypto.constants.CryptoOperation;
 import com.abstrucelogic.crypto.constants.CryptoProcessStatus;
-import com.abstrucelogic.crypto.mode.service.CryptoService.CryptoServiceBinder;
+import com.abstrucelogic.crypto.processor.DecryptionProcessor;
+import com.abstrucelogic.crypto.processor.EncryptionProcessor;
 
 public class CryptoServiceHandler implements CryptoHandler {
-
-	private CryptoService mCurServiceInstance;
 	
 	private CryptoConf mCurCryptoConf;
 	private Context mCurContext;
-	private boolean wasExecCalledWhenServiceNotReady = false;
+	
+	private EncryptionProcessor mEncProcessor;
+	private DecryptionProcessor mDecProcessor;
 	
 	public CryptoServiceHandler(CryptoConf conf, Context context) {
 		this.mCurCryptoConf = conf;
 		this.mCurContext = context;
-		Intent serviceIntent = new Intent(mCurContext, CryptoService.class);
-		context.bindService(serviceIntent, serviceConn, Context.BIND_AUTO_CREATE);
+		this.mEncProcessor = new EncryptionProcessor();
+		this.mEncProcessor.setProgressListener(this);
+		this.mDecProcessor = new DecryptionProcessor();
+		this.mDecProcessor.setProgressListener(this);
 	}
 	
 	@Override
 	public void processStatusUpdate(CryptoProcessStatus status, float progressPer) {
-		
+		switch(status) {
+			case COMPLETE :
+				this.mCurCryptoConf.getListener().cryptoProcessComplete();
+				CryptoScheduler.getInstance().requestRemoveFromSchedulingMap(this.mCurCryptoConf);
+				break;
+			case ERROR :
+				this.mCurCryptoConf.getListener().cryptoProcessError();
+				CryptoScheduler.getInstance().requestRemoveFromSchedulingMap(this.mCurCryptoConf);
+				break;
+			case INPROGRESS : 
+				this.mCurCryptoConf.getListener().cryptoInProgress(progressPer);
+				break;
+			case START:
+				this.mCurCryptoConf.getListener().cryptoProcessStarted();
+				break;
+		}
+	}
+
+	@Override
+	public void scheduledForExec() {
+		CryptoServiceInterface.getIntstance(this.mCurContext).scheduleInService(this.mCurCryptoConf.getInputFilePath());
 	}
 	
+	@Override
 	public void exec() {
-		if(this.mCurServiceInstance != null) {
-			this.mCurServiceInstance.updateInProcessMap(this.mCurCryptoConf);
-			startService();
-		} else {
-			wasExecCalledWhenServiceNotReady  = true;
+		CryptoOperation opp = this.mCurCryptoConf.getOperation();
+		switch(opp) {
+			case ENCRYPTION:
+				this.encrypt(this.mCurCryptoConf.getInputFilePath(), this.mCurCryptoConf.getOutputFilePath(), this.mCurCryptoConf.getCipher());
+				break;
+			case DECRYPTION:
+				this.decrypt(this.mCurCryptoConf.getInputFilePath(), this.mCurCryptoConf.getOutputFilePath(), this.mCurCryptoConf.getCipher());
+				break;
 		}
 	}
 	
-	private void startService() {
-		Intent serviceIntent = new Intent(mCurContext, CryptoService.class);
-		serviceIntent.putExtra(CryptoService.EXTRA_IN_PATH, this.mCurCryptoConf.getInputFilePath());
-		this.mCurContext.startService(serviceIntent);
+	private void encrypt(String inputFilePath, String outputFilePath, Cipher cipher) {
+		this.mEncProcessor.encryptFile(inputFilePath, outputFilePath, cipher);
 	}
-
-	private ServiceConnection serviceConn = new ServiceConnection()	{
-		public void onServiceConnected(ComponentName className, IBinder binder) {		
-			CryptoServiceBinder curBinder = (CryptoServiceBinder) binder;
-			CryptoServiceHandler.this.mCurServiceInstance = curBinder.getService();
-			if(wasExecCalledWhenServiceNotReady) {
-				exec();
-				wasExecCalledWhenServiceNotReady = false;
-			}
-		}
-		
-		public void onServiceDisconnected(ComponentName className) {
-			
-		}
-	};	
-
 	
+	private void decrypt(String inputFilePath, String outputFilePath, Cipher cipher) {
+		this.mDecProcessor.decryptFile(inputFilePath, outputFilePath, cipher);
+	}
 }

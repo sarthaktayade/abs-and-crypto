@@ -30,13 +30,17 @@ public class CryptoScheduler {
 	public void scheduleNewTask(CryptoConf conf, Context context) {
 		//check if task being performed on same file path. If yes, abort else proceed
 		if(this.mScheduledTasks.get(conf.getInputFilePath()) == null) {
-			CryptoHandler handler = this.getCryptoHandlerForConf(conf, context);
+			CryptoHandler handler = this.createCryptoHandlerForConf(conf, context);
 			mScheduledTasks.put(conf.getInputFilePath(), handler);
 			//add logic here to schedule a fixed number of tasks etc
-			handler.exec();
+			handler.scheduledForExec();
 		} else {
 			android.util.Log.e("CryptoScheduler Error", "Crypto operation already running on filepath - " + conf.getInputFilePath());
 		}
+	}
+	
+	public CryptoHandler getScheduledTask(String inPath) {
+		return this.mScheduledTasks.get(inPath);
 	}
 	
 	public void requestRemoveFromSchedulingMap(CryptoConf conf) {
@@ -49,7 +53,7 @@ public class CryptoScheduler {
 		}
 	}
 	
-	private CryptoHandler getCryptoHandlerForConf(CryptoConf conf, Context context) {
+	private CryptoHandler createCryptoHandlerForConf(CryptoConf conf, Context context) {
 		CryptoHandler handler = null;
 		CryptoProcessMode cryptoProcessMode = conf.getProcessMode();
 		switch(cryptoProcessMode) {

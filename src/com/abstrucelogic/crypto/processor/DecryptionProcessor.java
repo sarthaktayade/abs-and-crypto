@@ -83,21 +83,4 @@ public class DecryptionProcessor {
 			}
 		}
 	}
-	
-	/*private static Cipher getDecCipher() {
-		Cipher cipher = null;
-		try {
-			cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");	
-			byte[] byteArrKey = FileDecryptor.key.getBytes("UTF-8");
-			byte[] byteArr = "1234567891234567".getBytes("UTF-8");
-			SecretKeySpec keySpec = new SecretKeySpec(byteArrKey, "AES/CBC/PKCS5Padding");
-			IvParameterSpec spec = new IvParameterSpec(byteArr);
-			cipher.init(Cipher.DECRYPT_MODE, keySpec, spec); 	
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
-		return cipher;
-
-	}*/
-	
 }

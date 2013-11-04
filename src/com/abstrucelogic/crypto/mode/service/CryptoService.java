@@ -1,13 +1,5 @@
 package com.abstrucelogic.crypto.mode.service;
 
-import java.util.HashMap;
-
-import com.abstrucelogic.crypto.R;
-import com.abstrucelogic.crypto.conf.CryptoConf;
-import com.abstrucelogic.crypto.constants.CryptoOperation;
-import com.abstrucelogic.crypto.processor.DecryptionProcessor;
-import com.abstrucelogic.crypto.processor.EncryptionProcessor;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,15 +12,18 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.widget.Toast;
 import android.os.Process;
+import android.widget.Toast;
+
+import com.abstrucelogic.crypto.CryptoHandler;
+import com.abstrucelogic.crypto.CryptoScheduler;
+import com.abstrucelogic.crypto.R;
 
 public class CryptoService extends Service {
 
 	public static String EXTRA_IN_PATH = "inpath";
 	private IBinder curBinder;
 	private ServiceHandler curServiceHandler;
-	private HashMap<String, CryptoConf> inProcessMap; 
 	
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Toast.makeText(this, "Service onStart", Toast.LENGTH_SHORT).show();
@@ -44,12 +39,7 @@ public class CryptoService extends Service {
 		encThread.start();
 		Looper encThreadLooper = encThread.getLooper();
 		this.curServiceHandler = new ServiceHandler(encThreadLooper);
-		this.inProcessMap = new HashMap<String, CryptoConf>();
 		this.showNotification();
-	}
-
-	public void updateInProcessMap(CryptoConf conf) {
-		this.inProcessMap.put(conf.getInputFilePath(), conf);
 	}
 	
 	public IBinder onBind(Intent intent) {
@@ -85,23 +75,8 @@ public class CryptoService extends Service {
 
 		public void handleMessage(Message msg) {
 			String inPath = (String) msg.obj;
-			CryptoConf conf = CryptoService.this.inProcessMap.get(inPath);
-			CryptoOperation opp = conf.getOperation();
-			EncryptionProcessor encProcessor = null;
-			DecryptionProcessor decProcessor = null;
-			switch(opp) {
-				case ENCRYPTION :
-					encProcessor = new EncryptionProcessor();
-					encProcessor.encryptFile(conf.getInputFilePath(), conf.getOutputFilePath(), conf.getCipher());
-					//encProcessor.setProgressListener(this);
-					break;
-				case DECRYPTION :
-					decProcessor = new DecryptionProcessor();
-					decProcessor.decryptFile(conf.getInputFilePath(), conf.getOutputFilePath(), conf.getCipher());
-					//decProcessor.setProgressListener(this);
-					break;
-			}
-			CryptoService.this.inProcessMap.remove(inPath);
+			CryptoHandler handler = CryptoScheduler.getInstance().getScheduledTask(inPath);
+			handler.exec();
 			CryptoService.this.stopSelf(msg.arg1);
 		}
 	}

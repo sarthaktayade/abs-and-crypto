@@ -44,6 +44,12 @@ public class CryptoSyncHandler implements CryptoHandler {
 		}
 	}
 	
+	@Override
+	public void scheduledForExec() {
+		this.exec();
+	}
+	
+	@Override
 	public void exec() {
 		CryptoOperation opp = this.mCurCryptoConf.getOperation();
 		switch(opp) {
@@ -56,11 +62,11 @@ public class CryptoSyncHandler implements CryptoHandler {
 		}
 	}
 	
-	public void encrypt(String inputFilePath, String outputFilePath, Cipher cipher) {
+	private void encrypt(String inputFilePath, String outputFilePath, Cipher cipher) {
 		this.mEncProcessor.encryptFile(inputFilePath, outputFilePath, cipher);
 	}
 	
-	public void decrypt(String inputFilePath, String outputFilePath, Cipher cipher) {
+	private void decrypt(String inputFilePath, String outputFilePath, Cipher cipher) {
 		this.mDecProcessor.decryptFile(inputFilePath, outputFilePath, cipher);
 	}
 	
