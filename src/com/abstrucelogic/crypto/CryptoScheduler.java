@@ -38,6 +38,7 @@ public class CryptoScheduler {
 		} else {
 			android.util.Log.e("CryptoScheduler Error", "Crypto operation already running on filepath - " + conf.getInputFilePath());
 		}
+		this.logSize();
 	}
 	
 	public CryptoHandler getScheduledTask(String inPath) {
@@ -52,6 +53,7 @@ public class CryptoScheduler {
 		} else {
 			android.util.Log.e("CryptoScheduler", "Error when removing task from scheduling - " + conf.getInputFilePath());
 		}
+		this.logSize();
 	}
 	
 	private CryptoHandler createCryptoHandlerForConf(CryptoConf conf, Context context) {
@@ -59,16 +61,19 @@ public class CryptoScheduler {
 		CryptoProcessMode cryptoProcessMode = conf.getProcessMode();
 		switch(cryptoProcessMode) {
 			case ASYNC : 
-				handler = new CryptoAsyncHandler(conf);
+				handler = new CryptoAsyncHandler(conf, context);
 				break;
 			case SERVICE : 
 				handler = new CryptoServiceHandler(conf, context);
 				break;
 			case SYNC :
-				handler = new CryptoSyncHandler(conf);
+				handler = new CryptoSyncHandler(conf, context);
 				break;
 		}
 		return handler;
 	}
 	
+	private void logSize() {
+		android.util.Log.v("Size - ", "" + this.mScheduledTasks.size());
+	}
 }

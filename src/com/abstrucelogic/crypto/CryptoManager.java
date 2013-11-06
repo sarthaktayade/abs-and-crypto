@@ -3,14 +3,13 @@ package com.abstrucelogic.crypto;
 import android.content.Context;
 
 import com.abstrucelogic.crypto.conf.CryptoConf;
+
 /**
- * 
  * This class is the entry point for an application to use the library functionality.
  * Applications should not be required to access other classes from the library 
  * (Of-course they will need to create an instance CryptoConf when calling the process method present in this class).
  * 
  * @author abslog
- *
  */
 public class CryptoManager {
 

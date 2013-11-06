@@ -1,21 +1,22 @@
 package com.abstrucelogic.crypto.mode.async;
 
+import android.content.Context;
+
 import com.abstrucelogic.crypto.conf.CryptoConf;
 import com.abstrucelogic.crypto.mode.AbstractCryptoHandler;
 
 public class CryptoAsyncHandler extends AbstractCryptoHandler {
 	
-	public CryptoAsyncHandler(CryptoConf conf) {
-		super(conf);
+	private CryptoAsyncTask mCurAsyncTask;
+	
+	public CryptoAsyncHandler(CryptoConf conf, Context context) {
+		super(conf, context);
+		this.mCurAsyncTask = new CryptoAsyncTask(this);
 	}
 
 	@Override
 	public void scheduledForExec() {
-		this.exec();
-	}
-	
-	public void exec() {
-		new CryptoAsyncTask(this).execute((Void) null);
+		this.mCurAsyncTask.execute((Void) null);
 	}
 
 }

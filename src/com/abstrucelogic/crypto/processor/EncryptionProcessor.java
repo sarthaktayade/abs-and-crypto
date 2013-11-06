@@ -55,6 +55,10 @@ public class EncryptionProcessor {
 			outStream = new FileOutputStream(outputFile);	
 			buffOutStream = new BufferedOutputStream(outStream);
 		
+			if(mProcessListener != null) {
+				mProcessListener.processStatusUpdate(CryptoProcessStatus.START, 0);
+			}
+			
 			//encryption
 			cipherOutStream = new CipherOutputStream(buffOutStream, cipher);	
 			byte[] buff = new byte[10240];

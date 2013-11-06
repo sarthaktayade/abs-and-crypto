@@ -1,14 +1,14 @@
-/**
- * 
- */
 package com.abstrucelogic.crypto.mode;
 
 import javax.crypto.Cipher;
+
+import android.content.Context;
 
 import com.abstrucelogic.crypto.CryptoScheduler;
 import com.abstrucelogic.crypto.conf.CryptoConf;
 import com.abstrucelogic.crypto.constants.CryptoOperation;
 import com.abstrucelogic.crypto.constants.CryptoProcessStatus;
+import com.abstrucelogic.crypto.notificatoin.CryptoNotification;
 import com.abstrucelogic.crypto.processor.DecryptionProcessor;
 import com.abstrucelogic.crypto.processor.EncryptionProcessor;
 
@@ -18,36 +18,45 @@ import com.abstrucelogic.crypto.processor.EncryptionProcessor;
  */
 public abstract class AbstractCryptoHandler implements CryptoHandler {
 
+	private CryptoNotification mCurNot;
+	
 	protected CryptoConf mCurCryptoConf;
 	protected EncryptionProcessor mEncProcessor;
 	protected DecryptionProcessor mDecProcessor;
 	
-	public AbstractCryptoHandler(CryptoConf conf) {
+	public AbstractCryptoHandler(CryptoConf conf, Context curContext) {
 		this.mEncProcessor = new EncryptionProcessor();
 		this.mEncProcessor.setProgressListener(this);
 		this.mDecProcessor = new DecryptionProcessor();
 		this.mDecProcessor.setProgressListener(this);
 		this.mCurCryptoConf = conf;
+		this.mCurNot = new CryptoNotification(curContext);
 	}
 	
 	@Override
 	public void processStatusUpdate(CryptoProcessStatus status, float progressPer) {
 		switch(status) {
-		case COMPLETE :
-			this.mCurCryptoConf.getListener().cryptoProcessComplete();
-			CryptoScheduler.getInstance().requestRemoveFromSchedulingMap(this.mCurCryptoConf);
-			break;
-		case ERROR :
-			this.mCurCryptoConf.getListener().cryptoProcessError();
-			CryptoScheduler.getInstance().requestRemoveFromSchedulingMap(this.mCurCryptoConf);
-			break;
-		case INPROGRESS : 
-			this.mCurCryptoConf.getListener().cryptoInProgress(progressPer);
-			break;
-		case START:
-			this.mCurCryptoConf.getListener().cryptoProcessStarted();
-			break;
-	}
+			case COMPLETE :
+				android.util.Log.e("CryptoHandler", "complete");
+				this.mCurCryptoConf.getListener().cryptoProcessComplete();
+				CryptoScheduler.getInstance().requestRemoveFromSchedulingMap(this.mCurCryptoConf);
+				break;
+			case ERROR :
+				android.util.Log.e("CryptoHandler", "error");
+				this.mCurCryptoConf.getListener().cryptoProcessError();
+				CryptoScheduler.getInstance().requestRemoveFromSchedulingMap(this.mCurCryptoConf);
+				break;
+			case INPROGRESS : 
+				android.util.Log.e("CryptoHandler", "inprogress - " + progressPer);
+				this.mCurNot.updateNotification(progressPer);
+				this.mCurCryptoConf.getListener().cryptoInProgress(progressPer);
+				break;
+			case START:
+				android.util.Log.e("CryptoHandler", "start");
+				this.mCurNot.showNotification();
+				this.mCurCryptoConf.getListener().cryptoProcessStarted();
+				break;
+		}
 	}
 
 
