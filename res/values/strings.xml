@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ACTIVITY_ENTRY_NAME</string>
+    <string name="not_compl">Crypto operation successful!</string>
+    <string name="not_bigtext">Crypto operation in progress!</string>
+    <string name="not_err">Error. Crypto operation unsuccessful. Please try again!</string>
 </resources>

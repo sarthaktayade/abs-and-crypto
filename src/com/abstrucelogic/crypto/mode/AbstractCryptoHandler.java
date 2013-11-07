@@ -30,7 +30,7 @@ public abstract class AbstractCryptoHandler implements CryptoHandler {
 		this.mDecProcessor = new DecryptionProcessor();
 		this.mDecProcessor.setProgressListener(this);
 		this.mCurCryptoConf = conf;
-		this.mCurNot = new CryptoNotification(curContext);
+		this.mCurNot = new CryptoNotification(curContext, conf.getInputFilePath());
 	}
 	
 	@Override
@@ -38,11 +38,13 @@ public abstract class AbstractCryptoHandler implements CryptoHandler {
 		switch(status) {
 			case COMPLETE :
 				android.util.Log.e("CryptoHandler", "complete");
+				this.mCurNot.setCompleteNotification();
 				this.mCurCryptoConf.getListener().cryptoProcessComplete();
 				CryptoScheduler.getInstance().requestRemoveFromSchedulingMap(this.mCurCryptoConf);
 				break;
 			case ERROR :
 				android.util.Log.e("CryptoHandler", "error");
+				this.mCurNot.setErrorNotification();
 				this.mCurCryptoConf.getListener().cryptoProcessError();
 				CryptoScheduler.getInstance().requestRemoveFromSchedulingMap(this.mCurCryptoConf);
 				break;
