@@ -38,6 +38,10 @@ public class DecryptionProcessor {
 			outStream = new FileOutputStream(outFile);
 			bufOutStream = new BufferedOutputStream(outStream);			
 
+			if(mProcessListener != null) {
+				mProcessListener.processStatusUpdate(CryptoProcessStatus.START, 0);
+			}
+			
 			//decrypt and write to file	
 			byte[] buff = new byte[10240];	
 			int bytesAvailable = 0;
