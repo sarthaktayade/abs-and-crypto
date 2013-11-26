@@ -35,7 +35,7 @@ public class CryptoNotification {
 		this.mBuilder = new NotificationCompat.Builder(this.mContext);
 		this.mBuilder.setContentTitle(this.mFileName);
 		//this.mBuilder.setContentText("Test");
-		this.mBuilder.setSmallIcon(R.drawable.loc);
+		this.mBuilder.setSmallIcon(R.drawable.shield_square_black_32x32);
 		this.mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(this.mContext.getResources().getString(R.string.not_bigtext)));
         PendingIntent contentIntent = PendingIntent.getActivity(this.mContext, 0, new Intent(), 0);
         this.mBuilder.setContentIntent(contentIntent);
